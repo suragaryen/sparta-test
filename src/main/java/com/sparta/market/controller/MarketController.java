@@ -1,14 +1,16 @@
-package com.sparta.memo.controller;
+package com.sparta.market.controller;
 
-import com.sparta.memo.dto.MarketRequestDto;
-import com.sparta.memo.dto.MarketResponseDto;
-import com.sparta.memo.service.MarketService;
+import com.sparta.market.dto.MarketRequestDto;
+import com.sparta.market.dto.MarketResponseDto;
+import com.sparta.market.service.MarketService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+//@RequestMapping("/api")
 public class MarketController {
 
 
@@ -18,23 +20,33 @@ public class MarketController {
         this.marketService = marketService;
     }
 
-    @PostMapping("/memos")
+    @GetMapping("/")
+    public String createMemo() {
+        return "hello";
+    }
+
+
+    @PostMapping("/post")
     public MarketResponseDto createMemo(@RequestBody MarketRequestDto requestDto) {
-        return marketService.createMemo(requestDto);
+
+        System.out.println(requestDto.toString());
+        return marketService.createMarket(requestDto);
     }
 
-    @GetMapping("/memos")
+    @GetMapping("/post")
     public List<MarketResponseDto> getMemos() {
-        return marketService.getMemos();
+        return marketService.getMarkets();
     }
 
-    @PutMapping("/memos/{id}")
-    public Long updateMemo(@PathVariable Long id, @RequestBody MarketRequestDto requestDto) {
-        return marketService.updateMemo(id, requestDto);
+    @PutMapping("/post/{id}")
+    public MarketResponseDto updateMemo(@PathVariable("id") Long id, @RequestBody MarketRequestDto requestDto) {
+
+        return marketService.updateMarket(id, requestDto);
     }
 
-    @DeleteMapping("/memos/{id}")
-    public Long deleteMemo(@PathVariable Long id) {
-        return marketService.deleteMemo(id);
+    @DeleteMapping("/post/{id}")
+    public ResponseEntity<?> deleteMemo(@PathVariable("id") Long id) {
+        marketService.deleteMarket(id);
+        return ResponseEntity.ok().body(Map.of("msg", "삭제완료"));
     }
 }

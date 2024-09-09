@@ -1,6 +1,6 @@
-package com.sparta.memo.entity;
+package com.sparta.market.entity;
 
-import com.sparta.memo.dto.MarketRequestDto;
+import com.sparta.market.dto.MarketRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,26 +15,30 @@ public class Market {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "username", nullable = false)
     private String username;
+
     @Column(name = "title", nullable = false, length = 500)
     private String title;
+
     @Column(name = "content", nullable = false, length = 500)
-    private String contents;
+    private String content;
+
     @Column(name = "price", nullable = false)
     private int price;
 
     public Market(MarketRequestDto requestDto) {
         this.username = requestDto.getUsername();
-        this.contents = requestDto.getContents();
         this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
         this.price = requestDto.getPrice();
     }
 
     public void update(MarketRequestDto requestDto) {
         this.username = requestDto.getUsername();
-        this.contents = requestDto.getContents();
         this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
         this.price = requestDto.getPrice();
     }
 }

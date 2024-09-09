@@ -1,9 +1,10 @@
-package com.sparta.memo.service;
+package com.sparta.market.service;
 
-import com.sparta.memo.dto.MarketRequestDto;
-import com.sparta.memo.dto.MarketResponseDto;
-import com.sparta.memo.entity.Market;
-import com.sparta.memo.repository.MarketRepository;
+
+import com.sparta.market.dto.MarketRequestDto;
+import com.sparta.market.dto.MarketResponseDto;
+import com.sparta.market.entity.Market;
+import com.sparta.market.repository.MarketRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,48 +19,51 @@ public class MarketService {
         this.marketRepository = marketRepository;
     }
 
-    public MarketResponseDto createMemo(MarketRequestDto requestDto) {
+    public MarketResponseDto createMarket(MarketRequestDto requestDto) {
         // RequestDto -> Entity
         Market market = new Market(requestDto);
 
         // DB 저장
-        Market saveMarket = marketRepository.saveAll(market);
+        Market savedMarket = marketRepository.save(market);
 
         // Entity -> ResponseDto
-        MarketResponseDto marketResponseDto = new MarketResponseDto(saveMarket);
+        MarketResponseDto marketResponseDto = new MarketResponseDto(savedMarket);
 
         return marketResponseDto;
     }
 
-    public List<MarketResponseDto> getMemos() {
+    public List<MarketResponseDto> getMarkets() {
         // DB 조회
-        return marketRepository.findAllByOrderByModifiedAtDesc().stream().map(MarketResponseDto::new).toList();
+        return marketRepository.findAll().stream().map(MarketResponseDto::new).toList();
     }
 
     @Transactional
-    public Long updateMemo(Long id, MarketRequestDto requestDto) {
-        // 해당 메모가 DB에 존재하는지 확인
-        Market market = findMemo(id);
+    public MarketResponseDto updateMarket(Long id, MarketRequestDto requestDto) {
+        // 해당 Market이 DB에 존재하는지 확인
+        Market market = findMarket(id);
 
-        // memo 내용 수정
         market.update(requestDto);
 
+
+        // Market 내용 수정
+        MarketResponseDto marketResponseDto = new MarketResponseDto(market);
+
+        return marketResponseDto;
+    }
+
+    public Long deleteMarket(Long id) {
+        // 해당 Market이 DB에 존재하는지 확인
+        Market market = findMarket(id);
+
+        // Market 삭제
+        marketRepository.delete(market);
+
         return id;
     }
 
-    public Long deleteMemo(Long id) {
-        // 해당 메모가 DB에 존재하는지 확인
-        Memo memo = findMemo(id);
-
-        // memo 삭제
-        memoRepository.delete(memo);
-
-        return id;
-    }
-
-    private Memo findMemo(Long id) {
-        return memoRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")
+    private Market findMarket(Long id) {
+        return marketRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("선택한 Market은 존재하지 않습니다.")
         );
     }
 }
