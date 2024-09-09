@@ -1,4 +1,4 @@
-package com.sparta.memo;
+package com.sparta.market;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
